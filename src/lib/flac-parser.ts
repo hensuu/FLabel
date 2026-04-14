@@ -116,15 +116,15 @@ function parseStreamInfo(data: Uint8Array): StreamInfo {
   const sampleRate = (b10 << 12) | (b11 << 4) | (b12 >> 4);
   const channels = ((b12 >> 1) & 0x07) + 1;
   const bitsPerSample = (((b12 & 0x01) << 4) | (b13 >> 4)) + 1;
-  // Total samples: lower 4 bits of b13 + bytes 14..17 = 36 bits
-  const high4 = b13 & 0x0f;
-  const lowerBits =
-    BigInt(data[14]) * 0x1000000n +
-    BigInt(data[15]) * 0x10000n +
-    BigInt(data[16]) * 0x100n +
-    BigInt(data[17]);
-  const totalSamplesBig = (BigInt(high4) << 32n) | lowerBits;
-  const totalSamples = Number(totalSamplesBig);
+  // Total samples: lower 4 bits of b13 + bytes 14..17 = 36 bits.
+  // 36 bits fits safely inside a JS Number (max safe int is 2^53 - 1),
+  // so we just use integer multiplication instead of BigInt.
+  const totalSamples =
+    (b13 & 0x0f) * 0x100000000 +
+    data[14] * 0x1000000 +
+    data[15] * 0x10000 +
+    data[16] * 0x100 +
+    data[17];
 
   let md5 = "";
   for (let i = 18; i < 34; i++) {

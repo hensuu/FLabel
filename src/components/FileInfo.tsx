@@ -10,10 +10,18 @@ interface FileInfoProps {
 }
 
 export function FileInfo({ filename, fileSize, streamInfo }: FileInfoProps) {
-  const duration = streamInfo.sampleRate > 0 ? streamInfo.totalSamples / streamInfo.sampleRate : 0;
+  const canComputeDuration =
+    streamInfo.sampleRate > 0 && streamInfo.totalSamples > 0;
+  const duration = canComputeDuration
+    ? streamInfo.totalSamples / streamInfo.sampleRate
+    : 0;
 
   const items = [
-    { icon: Clock, label: "Duration", value: formatDuration(duration) },
+    {
+      icon: Clock,
+      label: "Duration",
+      value: canComputeDuration ? formatDuration(duration) : "—",
+    },
     { icon: Waves, label: "Sample rate", value: `${(streamInfo.sampleRate / 1000).toFixed(1)} kHz` },
     { icon: Hash, label: "Bit depth", value: `${streamInfo.bitsPerSample}-bit` },
     {
