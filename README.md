@@ -2,6 +2,7 @@
 
 > Browser-based FLAC metadata editor. 100% client-side — your audio files never leave your machine.
 
+
 FLabel is a privacy-friendly, zero-backend alternative to traditional desktop tag editors like Mp3tag, Kid3, and EasyTAG. It reads, displays, edits, and writes FLAC `VORBIS_COMMENT` tags and `PICTURE` cover art entirely in the browser using a custom FLAC binary parser/writer. Audio frames are copied byte-for-byte — there is no re-encoding and no quality loss.
 
 ## Phase 1 features
